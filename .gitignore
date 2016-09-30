@@ -1,3 +1,6 @@
+# ignore logdirs created by riak-check-debug.py
+riak-check-debug-log*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
