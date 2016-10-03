@@ -368,8 +368,8 @@ def build_combine_logs(application, pattern, directories):
     ## build the combined error log
     errorLog = build_log(filenameRE, loglineRE, errorLogFiles)
     errorLogOut = application + '-combined-error.log'
-    log2file(consoleLogOut, consoleLog)
-    info("%s written to:\n\t%s/%s" % (consoleLogOut, logdir, consoleLogOut))
+    log2file(errorLogOut, errorLog)
+    info("%s written to:\n\t%s/%s" % (errorLogOut, logdir, errorLogOut))
     space()
 
 def build_log(filenameRE, loglineRE, logFiles):
