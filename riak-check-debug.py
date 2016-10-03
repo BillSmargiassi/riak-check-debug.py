@@ -372,6 +372,13 @@ def build_combine_logs(application, pattern, directories):
     info("%s written to:\n\t%s/%s" % (errorLogOut, logdir, errorLogOut))
     space()
 
+    ## build the combined timeline log
+    timelineLog = sorted(errorLog + consoleLog)
+    timelineLogOut = application + '-combined-timeline.log'
+    log2file(timelineLogOut, timelineLog)
+    info("%s written to:\n\t%s/%s" % (timelineLogOut, logdir, timelineLogOut))
+    space()
+
 def build_log(filenameRE, loglineRE, logFiles):
     """build a combined log given search parameters and files to parse"""
 
