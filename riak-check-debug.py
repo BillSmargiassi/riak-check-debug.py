@@ -97,7 +97,7 @@ mainconfig = {
     'System Report': {
         'commands/schedulers': {
             'match': {
-                'cfq': 'CFQ (Completely Fair Queueing)'
+                '\[cfq\]': 'CFQ (Completely Fair Queueing)'
             }
         }
     },
