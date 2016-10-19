@@ -163,7 +163,7 @@ baseDirs = []
 files = []
 
 ## directory to log all files to
-logdir = 'riak-check-debug-logs-' + str(datetime.datetime.now()).replace(' ', '').replace(':', '.')
+logdir = 'riak-check-debug-logs-' + str(datetime.datetime.now()).replace(' ', '_').replace(':', '.')
 
 ## all the report data built for logging and display
 report = defaultdict()
