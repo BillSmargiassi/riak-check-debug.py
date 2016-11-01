@@ -12,7 +12,7 @@ Tested against Python 2.7.12.
 Retrieve the script with `wget`:
 
 ```shell
-wget https://raw.githubusercontent.com/shaneutt/riak-check-debug.py/master/riak-check-debug.py
+wget https://raw.githubusercontent.com/basho/riak-check-debug.py/master/riak-check-debug.py
 chmod +x riak-check-debug.py
 ```
 
