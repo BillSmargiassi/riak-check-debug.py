@@ -113,13 +113,18 @@ mainconfig = {
     'Riak Console Log Report': {
         'platform_log_dir/console.log': {
             'count': {
-                'Read large object': 'Found reports of reading large objects',
+                'Read(ing)? large object': 'Found reports of reading large objects', # "Reading" is 1.4.8 syntax
                 'Too many siblings': 'Found reports of objects with too many siblings'
             },
             'unique': {
                 'Read large object (<<\"?.*\"?>>/<<\"?.*\"?>>) \(([0-9]+) bytes\)': {
                     'description': 'Large Object',
                     'format': '%s (%s) bytes',
+                    'replace': [('<', ''), ('>', ''), ('"', '')]
+                },
+                'Reading large object of size ([0-9]+) from (<<\"?.*\"?>>/<<\"?.*\"?>>)': { # Riak 1.4.8 syntax
+                    'description': 'Large Object',
+                    'format': '(%s) bytes %s',
                     'replace': [('<', ''), ('>', ''), ('"', '')]
                 },
                 'Too many siblings for object (<<\".*\">>/<<\".*\">>) (\([0-9]+\))': {
