@@ -89,12 +89,12 @@ mainconfig = {
     'Linux Network Stack Report': {
         'commands/sysctl|commands/sysctl_linux': {
             'submatch': {
-                'net.core.rmem_default = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found net.core.rmem_default lower than expected (should be at least 8388608) in %s:\n\tnet.core.rmem_default = %s',
-                'net.core.rmem_max = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found net.core.rmem_max lower than expected (should be at least 8388608) in %s:\n\tnet.core.rmem_max = %s',
-                'net.core.wmem_default = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found net.core.wmem_default lower than expected (should be at least 8388608) in %s:\n\tnet.core.wmem_default = %s',
-                'net.core.wmem_max = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found net.core.wmem_max lower than expected (should be at least 8388608) in %s:\n\tnet.core.wmem_max = %s',
+                'net.core.rmem_default = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found LOW net.core.rmem_default (should be at least 8388608) in %s:\n\tnet.core.rmem_default = %s',
+                'net.core.rmem_max = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found LOW net.core.rmem_max (should be at least 8388608) in %s:\n\tnet.core.rmem_max = %s',
+                'net.core.wmem_default = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found LOW net.core.wmem_default (should be at least 8388608) in %s:\n\tnet.core.wmem_default = %s',
+                'net.core.wmem_max = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found LOW net.core.wmem_max (should be at least 8388608) in %s:\n\tnet.core.wmem_max = %s',
                 'net.core.netdev_max_backlog = ([0-9]{0,4}\s+)': 'Found LOW net.core.netdev_max_backlog (should be at least 10000) in %s:\n\tnet.core.netdev_max_backlog = %s',
-            }
+            },
         }
     },
     'Memory Report': {
@@ -163,6 +163,11 @@ mainconfig = {
             }
         }
     }
+}
+
+## Link docs to report categories
+docs = {
+    'Linux Network Stack Report': ['http://docs.basho.com/riak/kv/latest/using/performance/#kernel-and-network-tuning']
 }
 
 ##-----------------------------------------------------------------------------
@@ -597,9 +602,6 @@ def reporter():
 
         ## find all the parse jobs in the category
         descriptions = sorted(data.keys())
-        if len(descriptions) < 1:
-            success("Done! Nothing to report!")
-
         for description in descriptions:
             descData = data[description]
             for strategy in descData:
@@ -611,6 +613,16 @@ def reporter():
                 else:
                     lines = descData[strategy]
                     lager(category, lines)
+
+        if len(descriptions) < 1:
+            success("Done! Nothing to report!")
+        else:
+            if category in docs:
+                related_docs = docs[category]
+                if len(related_docs) > 0:
+                    footer("Relevant Docs")
+                for doc in related_docs:
+                    info(doc)
 
         count += 1
 
@@ -638,6 +650,13 @@ class bcolors:
 def error(msg, code=2):
     print bcolors.FAIL + msg + bcolors.ENDC
     sys.exit(code)
+
+def footer(msg):
+    msg = "-- " + msg + " --\n"
+    if args.log_report:
+        log2file('report.txt', msg)
+    else:
+        print bcolors.INFOWARN, msg, bcolors.ENDC
 
 def header(msg):
     msg = "= " + msg + " =\n"
