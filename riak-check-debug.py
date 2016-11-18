@@ -86,6 +86,17 @@ mainconfig = {
             }
         }
     },
+    'Linux Network Stack Report': {
+        'commands/sysctl|commands/sysctl_linux': {
+            'submatch': {
+                'net.core.rmem_default = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found net.core.rmem_default lower than expected (should be at least 8388608) in %s:\n\tnet.core.rmem_default = %s',
+                'net.core.rmem_max = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found net.core.rmem_max lower than expected (should be at least 8388608) in %s:\n\tnet.core.rmem_max = %s',
+                'net.core.wmem_default = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found net.core.wmem_default lower than expected (should be at least 8388608) in %s:\n\tnet.core.wmem_default = %s',
+                'net.core.wmem_max = ([0-9]{0,6}\s+|[0-7][0-9]{0,6}\s+|8[0-2][0-9]{0,5}\s+)': 'Found net.core.wmem_max lower than expected (should be at least 8388608) in %s:\n\tnet.core.wmem_max = %s',
+                'net.core.netdev_max_backlog = ([0-9]{0,4}\s+)': 'Found LOW net.core.netdev_max_backlog (should be at least 10000) in %s:\n\tnet.core.netdev_max_backlog = %s',
+            }
+        }
+    },
     'Memory Report': {
         'commands/dmesg|commands/messages|commands/meminfo': {
             'count': {
