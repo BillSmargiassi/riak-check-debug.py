@@ -138,7 +138,7 @@ mainconfig = {
                     'format': '(%s) bytes %s',
                     'replace': [('<', ''), ('>', ''), ('"', '')]
                 },
-                'Too many siblings for object (<<\".*\">>/<<\".*\">>) (\([0-9]+\))': {
+                'Too many siblings for object (<<\"?.*\"?>>/<<\"?.*\"?>>) (\([0-9]+\))': {
                     'description': 'Object with too many siblings',
                     'format': '%s has %s siblings',
                     'replace': [('<', ''), ('>', ''), ('"', '')]
