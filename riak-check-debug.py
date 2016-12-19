@@ -148,11 +148,8 @@ mainconfig = {
     },
     'Bitcask Report': {
         'platform_log_dir/console.log': {
-            'unique': {
-                "Hintfile ('.*') invalid": {
-                    'description': 'Invalid Hintfile',
-                    'format': '%s'
-                }
+            'submatch': {
+                "Hintfile ('.*') invalid": "Found invalid hintfile in %s:\n\thintfile: %s"
             }
         }
     },
@@ -497,7 +494,7 @@ def run_unique_strategy(filename, category, pattern_data, matches):
         submatches = data['submatches']
         description = pattern_data[pattern]['description']
         printformat = pattern_data[pattern]['format']
-        content = printformat % submatches
+        content = printformat % submatches + (filename,)
         identifier = submatches[0]
 
         ## build the report
