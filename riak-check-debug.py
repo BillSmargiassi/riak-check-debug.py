@@ -494,7 +494,7 @@ def run_unique_strategy(filename, category, pattern_data, matches):
         submatches = data['submatches']
         description = pattern_data[pattern]['description']
         printformat = pattern_data[pattern]['format']
-        content = printformat % submatches + (filename,)
+        content = printformat % submatches
         identifier = submatches[0]
 
         ## build the report
