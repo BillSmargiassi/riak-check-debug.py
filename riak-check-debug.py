@@ -294,7 +294,7 @@ def setup():
     ## get any dirs that look like riak-debug dirs
     global riakKVDebugDirs
     for directory in baseDirs:
-        newRiakDirs = glob.glob(safe_add_slash(directory) + "*-riak-debug")
+        newRiakDirs = glob.glob(os.path.join(directory, "*-riak-debug"))
         riakKVDebugDirs = riakKVDebugDirs + newRiakDirs
     if not riakKVDebugDirs and not args.tar_mode:
         warning('found no *-riak-debug directories')
@@ -302,7 +302,7 @@ def setup():
     ## get any dirs that look like riak-cs-debug dirs
     global riakCSDebugDirs
     for directory in baseDirs:
-        newCSDirs = glob.glob(safe_add_slash(directory) + "*-riak-cs-debug")
+        newCSDirs = glob.glob(os.path.join(directory, "*-riak-cs-debug"))
         riakCSDebugDirs = riakCSDebugDirs + newCSDirs
 
     ## set up the categories
@@ -726,13 +726,6 @@ def get_file_config(filename):
                     config[category][strategy] = mainconfig[category][file_pattern][strategy]
 
     return config
-
-def safe_add_slash(dir):
-    """make sure the path ends in a '/'"""
-
-    if dir[-1] != '/':
-        dir += '/'
-    return dir
 
 ##--- end ---###
 main()
