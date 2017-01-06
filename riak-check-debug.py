@@ -153,6 +153,13 @@ mainconfig = {
             }
         }
     },
+    'Config Report': {
+        'config/riak.conf$': {
+            'match_compare': {
+                'storage_backend = *': 'Found differing backend configurations'
+            }
+        }
+    },
     'Network Report': {
         'commands/netstat': {
             'count': {
@@ -179,6 +186,9 @@ baseDirs = []
 
 ## files for processing
 files = []
+
+## files collated for processing as a group
+match_compare_groups = {}
 
 ## directory to log all files to
 logdir = 'riak-check-debug-logs-' + str(datetime.datetime.now()).replace(' ', '_').replace(':', '.')
@@ -218,6 +228,13 @@ def main():
             for strategy in config[category].keys():
                 patterns = config[category][strategy]
                 run_strategy(filename, category, strategy, patterns)
+    
+    ## loop over file groups
+    for category in match_compare_groups.keys():
+        filenames = match_compare_groups[category]['filenames']
+        strategy = 'match_compare'
+        pattern_data = match_compare_groups[category]['pattern_data']
+        run_multifile_strategy(filenames, category, strategy, pattern_data)
 
     ## display/log the end result
     reporter()
@@ -416,11 +433,15 @@ def run_strategy(filename, category, strategy, pattern_data):
 
     ## extract the configuration data and patterns
     patterns = pattern_data.keys()
+    global match_compare_groups
 
     if strategy == 'count':
         matches = do_count_matches(filename, patterns)
         if matches:
             run_count_strategy(filename, category, pattern_data, matches)
+    elif strategy == 'match_compare':
+        empty = {'pattern_data': pattern_data, 'filenames': []}
+        match_compare_groups.setdefault(category, empty)['filenames'].append(filename)
     else:
         matches = do_matches(filename, patterns)
         if matches:
@@ -432,6 +453,49 @@ def run_strategy(filename, category, strategy, pattern_data):
 
             if strategy == 'unique':
                 run_unique_strategy(filename, category, pattern_data, matches)
+
+def run_multifile_strategy(filenames, category, strategy, pattern_data):
+    if len(filenames) < 2: return
+    if strategy == 'match_compare':
+        run_match_compare_strategy(filenames, category, pattern_data)
+
+## The Match-Compare strategy looks for lines in files that match the specified pattern.
+## It then collates these lines and compares them for string equality.
+## If any are different or missing, it reports the line or lack for all files.
+def run_match_compare_strategy(filenames, category, pattern_data):
+    patterns = pattern_data.keys()
+    matches_dict = {}
+    for filename in filenames:
+        matches_dict[filename] = do_matches(filename, patterns)
+    ##print(matches_dict)
+    for pattern in patterns:
+        description = pattern
+        collated = []
+        for filename in filenames:
+            found_pattern = False
+            for item in matches_dict[filename]:
+                if item['pattern'] == pattern:
+                    found_pattern = True
+                    collated.append((filename, item['line']))
+            if found_pattern == False:
+                collated.append((filename, '***MISSING***\n'))
+        ##print(collated)
+        mismatch = False
+        for (name, line) in collated:
+            if not line == collated[0][1]:
+                ##print('mismatch found: %s != %s' % (line, collated[0]))
+                mismatch = True
+        ##print('mismatch == %s' % (mismatch))
+        if mismatch == True:
+            newline = "\"%s\" not identical in all files!\n" % (description)
+            for (name, line) in collated:
+                newline += "\t%s : %s" % (name, line)
+            ## build the report
+            if not 'match_compare' in report[category][description]:
+                report[category][description]['match_compare'] = [newline]
+            else:
+                report[category][description]['match_compare'].append(newline)
+
 
 def run_count_strategy(filename, category, pattern_data, matches):
     """process a list of matches into a report for a 'count' type report"""
