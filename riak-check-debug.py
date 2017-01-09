@@ -308,7 +308,7 @@ def setup():
     ## get any dirs that look like riak-debug dirs
     global riakKVDebugDirs
     for directory in baseDirs:
-        newRiakDirs = glob.glob(directory + "*-riak-debug")
+        newRiakDirs = glob.glob(os.path.join(directory, "*-riak-debug"))
         riakKVDebugDirs = riakKVDebugDirs + newRiakDirs
     if not riakKVDebugDirs and not args.tar_mode:
         warning('found no *-riak-debug directories')
@@ -316,7 +316,7 @@ def setup():
     ## get any dirs that look like riak-cs-debug dirs
     global riakCSDebugDirs
     for directory in baseDirs:
-        newCSDirs = glob.glob(directory + "*-riak-cs-debug")
+        newCSDirs = glob.glob(os.path.join(directory, "*-riak-cs-debug"))
         riakCSDebugDirs = riakCSDebugDirs + newCSDirs
 
     ## set up the categories
