@@ -156,7 +156,13 @@ mainconfig = {
     'Config Report': {
         'config/riak.conf$': {
             'match_compare': {
-                'storage_backend = *': 'Found differing backend configurations'
+                '^\s*storage_backend = *': '',
+                '^\s*distributed_cookie = *': '',
+                '^\s*ring_size = *': '',
+                '^\s*object.format = *': '',
+                '^\s*leveldb.maximum_memory.percent = *': '',
+                '^\s*search = *': '',
+                '^\s*anti_entropy = *': ''
             }
         }
     },
