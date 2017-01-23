@@ -118,6 +118,10 @@ mainconfig = {
                 'emfiles': 'Found file handle exhaustion (emfiles)',
                 'system_limit': 'Found Erlang resource exhaustion (system_limit)',
                 'Corruption': 'Found AAE Hashtree Corruption'
+            },
+            'match': {
+                    'no CRL': 'CRL Checking Enabled or is Invalid',
+                    'certificate unknown': 'Verify Correctness of Configured Certificates (Generation, Configuration, Client Usage)'
             }
         }
     },
