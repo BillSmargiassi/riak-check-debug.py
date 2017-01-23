@@ -328,13 +328,13 @@ def setup():
         report[category] = defaultdict(dict)
 
 def check_for_old_debugs():
-    """look for riak-debug directories that are olding than 6 hours and warn the user"""
+    """look for riak-debug directories that are older than 6 hours and warn the user"""
 
     thisreport = 'Debug Archive Age Report'
     for directory in riakKVDebugDirs + tarballs:
         mtime = os.path.getmtime(directory)
         now = datetime.datetime.utcnow()
-        then = datetime.datetime.fromtimestamp(mtime)
+        then = datetime.datetime.utcfromtimestamp(mtime)
         elapsed = now - then
         if elapsed.seconds > 21600: # 6 hours
             if not thisreport in report:
