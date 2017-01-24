@@ -251,7 +251,7 @@ def setup():
     ## build a parser and generate
     parser = argparse.ArgumentParser('riak-check-debug.py')
     parser.add_argument('-f', '--files', nargs='+', help='one or more files to parse', type=str, default=[])
-    parser.add_argument('-d', '--dirs', nargs='+', help='one or more directories to find files to parse', type=str, default=[])
+    parser.add_argument('-d', '--dirs', nargs='+', help='one or more directories to find files to parse', type=str, default=['.'])
     parser.add_argument('-l', '--log-report', help='log the entire report to a file instead of printing to stdout', action='store_true')
     parser.add_argument('-tar', '--tar-mode', nargs='+', help='use tarballs instead of extracted files for the reports', type=str, default=[])
     parser.add_argument('--no-collapse', help='disable "collapsing" of multiple redudant lines (warning: spammy)', action='store_true')
