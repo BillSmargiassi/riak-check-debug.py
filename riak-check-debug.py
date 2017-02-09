@@ -163,7 +163,13 @@ mainconfig = {
     'Config Report': {
         'config/riak.conf$': {
             'match_compare': {
-                'storage_backend = *': 'Found differing backend configurations'
+                '^\s*storage_backend = *': 'Found differing backend configurations',
+                '^\s*distributed_cookie = *': 'Found differing cookie configurations',
+                '^\s*ring_size = *': 'Found differing ring-size configurations',
+                '^\s*object.format = *': 'Found differing object-format configurations',
+                '^\s*leveldb.maximum_memory.percent = *': 'Found differing leveldb memory configurations',
+                '^\s*search = *': 'Found differing search configurations',
+                '^\s*anti_entropy = *': 'Found differing AAE configurations'
             }
         }
     },
@@ -476,7 +482,6 @@ def run_match_compare_strategy(filenames, category, pattern_data):
         matches_dict[filename] = do_matches(filename, patterns)
     ##print(matches_dict)
     for pattern in patterns:
-        description = pattern
         collated = []
         for filename in filenames:
             found_pattern = False
@@ -494,14 +499,14 @@ def run_match_compare_strategy(filenames, category, pattern_data):
                 mismatch = True
         ##print('mismatch == %s' % (mismatch))
         if mismatch == True:
-            newline = "\"%s\" not identical in all files!\n" % (description)
+            newline = "\"%s\" not identical in all files!\n" % (pattern)
             for (name, line) in collated:
                 newline += "\t%s : %s" % (name, line)
             ## build the report
-            if not 'match_compare' in report[category][description]:
-                report[category][description]['match_compare'] = [newline]
+            if not 'match_compare' in report[category][pattern]:
+                report[category][pattern]['match_compare'] = [newline]
             else:
-                report[category][description]['match_compare'].append(newline)
+                report[category][pattern]['match_compare'].append(newline)
 
 
 def run_count_strategy(filename, category, pattern_data, matches):
