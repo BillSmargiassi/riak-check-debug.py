@@ -241,7 +241,7 @@ def main():
             for strategy in config[category].keys():
                 patterns = config[category][strategy]
                 run_strategy(filename, category, strategy, patterns)
-    
+
     ## loop over file groups
     for category in match_compare_groups.keys():
         filenames = match_compare_groups[category]['filenames']
@@ -261,6 +261,7 @@ def setup():
     parser = argparse.ArgumentParser('riak-check-debug.py')
     parser.add_argument('-f', '--files', nargs='+', help='one or more files to parse', type=str, default=[])
     parser.add_argument('-d', '--dirs', nargs='+', help='one or more directories to find files to parse', type=str, default=['.'])
+    parser.add_argument('-o', '--output-dir', help='which directory to place debug output', type=str)
     parser.add_argument('-l', '--log-report', help='log the entire report to a file instead of printing to stdout', action='store_true')
     parser.add_argument('-tar', '--tar-mode', nargs='+', help='use tarballs instead of extracted files for the reports', type=str, default=[])
     parser.add_argument('--no-collapse', help='disable "collapsing" of multiple redudant lines (warning: spammy)', action='store_true')
@@ -271,6 +272,14 @@ def setup():
     ## ensure that we've been provided at least a list of files or dirs
     if not args.files and not args.dirs and not args.tar_mode:
         parser.error('one of -f, -d, or -tar must be provided')
+
+    ## allow for explicitly declared output directory
+    global logdir
+    if args.output_dir:
+        if os.path.isdir(args.output_dir):
+            logdir = args.output_dir
+        else:
+            error("no such directory: %s" % (args.output_dir))
 
     ## ensure that each file provided exists
     for f in args.files:
